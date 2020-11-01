@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gms_admin/models/report_model.dart';
 import 'package:gms_admin/services/report_service.dart';
+import 'package:gms_admin/widgets/custom_error_widget.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
 import 'package:intl/intl.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReportScreen extends StatefulWidget {
@@ -13,10 +15,15 @@ class ReportScreen extends StatefulWidget {
 }
 
 class _ReportScreenState extends State<ReportScreen> {
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
   List<Report> reports = [];
   bool isLoad = true;
 
   getReports() async {
+    isLoad = true;
+    setState(() {});
+    reports.clear();
     ReportService reportService = ReportService();
     reports = await reportService.getAllReports();
     isLoad = false;
@@ -109,48 +116,59 @@ class _ReportScreenState extends State<ReportScreen> {
 
     return isLoad == true
         ? CustomLoading()
-        : Container(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              itemBuilder: (context, index) {
-                if (prevDate == null) {
-                  prevDate = reports[index].complaintDate;
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        child: Text(
-                            "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
-                      ),
-                      reportCard(index)
-                    ],
-                  );
-                } else {
-                  final reportDay = DateTime(
-                      reports[index].complaintDate.year,
-                      reports[index].complaintDate.month,
-                      reports[index].complaintDate.day);
-                  final prevDay =
-                      DateTime(prevDate.year, prevDate.month, prevDate.day);
-                  bool check = reportDay == prevDay;
-                  if (!check) {
-                    prevDate = reports[index].complaintDate;
-                  }
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (!check)
-                        Container(
-                          child: Text(
-                              "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
-                        ),
-                      reportCard(index)
-                    ],
-                  );
-                }
-              },
-              itemCount: reports.length,
-            ),
-          );
+        : reports.length == 0
+            ? CustomErrorWidget(
+                title: "No reports found",
+                iconData: Icons.not_interested,
+              )
+            : Container(
+                child: SmartRefresher(
+                  enablePullDown: true,
+                  header: ClassicHeader(),
+                  onRefresh: getReports,
+                  controller: _refreshController,
+                  child: ListView.builder(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    itemBuilder: (context, index) {
+                      if (prevDate == null) {
+                        prevDate = reports[index].complaintDate;
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              child: Text(
+                                  "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
+                            ),
+                            reportCard(index)
+                          ],
+                        );
+                      } else {
+                        final reportDay = DateTime(
+                            reports[index].complaintDate.year,
+                            reports[index].complaintDate.month,
+                            reports[index].complaintDate.day);
+                        final prevDay = DateTime(
+                            prevDate.year, prevDate.month, prevDate.day);
+                        bool check = reportDay == prevDay;
+                        if (!check) {
+                          prevDate = reports[index].complaintDate;
+                        }
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (!check)
+                              Container(
+                                child: Text(
+                                    "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
+                              ),
+                            reportCard(index)
+                          ],
+                        );
+                      }
+                    },
+                    itemCount: reports.length,
+                  ),
+                ),
+              );
   }
 }
