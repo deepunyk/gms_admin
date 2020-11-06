@@ -6,6 +6,7 @@ import 'package:gms_admin/screens/collection_screen.dart';
 import 'package:gms_admin/screens/map_screen.dart';
 import 'package:gms_admin/screens/report_screen.dart';
 import 'package:gms_admin/screens/send_screen.dart';
+import 'package:gms_admin/screens/truck_location_screen.dart';
 import 'package:gms_admin/services/data_service.dart';
 import 'package:gms_admin/widgets/collected_section.dart';
 import 'package:gms_admin/widgets/collecting_section.dart';
@@ -20,7 +21,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int curIndex = 0;
-  List<Widget> screens = [CollectionScreen(), ReportScreen(), SendScreen()];
+  List<Widget> screens = [
+    CollectionScreen(),
+    ReportScreen(),
+    TruckLocationScreen(),
+    SendScreen(),
+  ];
 
   @override
   void initState() {
@@ -48,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text("GMS Udupi"),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: Theme.of(context).primaryColor,
+        unselectedItemColor: Colors.grey,
         onTap: (val) {
           curIndex = val;
           setState(() {});
@@ -64,6 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.feedback_outlined,
               ),
               label: "Reports"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.location_on,
+              ),
+              label: "Location"),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.send,
