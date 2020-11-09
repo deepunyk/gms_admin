@@ -64,7 +64,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   collectData() async {
-    createUserIcon();
+    //createUserIcon();
     addPolygon();
     mainModels.map((mainModel) {
       if (mainModel.startTime != null &&
@@ -93,7 +93,7 @@ class _MapScreenState extends State<MapScreen> {
                   markers: markers,
                   polygons: polygons,
                   initialCameraPosition: CameraPosition(
-                      zoom: 18, tilt: 0, bearing: 0, target: userLocation),
+                      zoom: 16, tilt: 0, bearing: 0, target: userLocation),
                   mapType: MapType.normal,
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
