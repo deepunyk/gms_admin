@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int curIndex = 0;
+  int curIndex = 2;
   List<Widget> screens = [
     CollectionScreen(),
     ReportScreen(),

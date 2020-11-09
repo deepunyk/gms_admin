@@ -18,10 +18,14 @@ class DataService {
     return;
   }
 
-  Future<void> getLocationData(List<TruckLocation> locations) async {
+  Future<void> getLocationData(
+      List<TruckLocation> locations, DateTime selectedDate) async {
     try {
-      final response = await http.get(
-          "https://xtoinfinity.tech/GCUdupi/admin/gms_php/getTruckLocation.php");
+      final response = await http.post(
+          "https://xtoinfinity.tech/GCUdupi/admin/gms_php/getTruckLocation.php",
+          body: {
+            "date": selectedDate.toString(),
+          });
       final jsonResponse = json.decode(response.body);
       final allData = jsonResponse['data'];
       allData.map((e) => locations.add(TruckLocation.fromJson(e))).toList();
