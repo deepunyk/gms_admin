@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gms_admin/models/truck_location_model.dart';
 import 'package:gms_admin/services/data_service.dart';
+import 'package:gms_admin/utils/truck_location_util.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
@@ -25,6 +27,8 @@ class _TruckLocationScreenState extends State<TruckLocationScreen> {
   BitmapDescriptor userIcon;
   SfRangeValues dateValues;
   bool isSetting = false;
+  List<bool> selections = [true, false];
+  TruckLocationUtil truckLocationUtil = TruckLocationUtil();
 
   DateTime selectedDate = DateTime.now();
 
@@ -44,26 +48,18 @@ class _TruckLocationScreenState extends State<TruckLocationScreen> {
     }
   }
 
-  Future<void> createUserIcon() async {
-    ImageConfiguration configuration = createLocalImageConfiguration(context);
-    userIcon = await BitmapDescriptor.fromAssetImage(
-      configuration,
-      'assets/images/truck_marker.png',
-    );
+  Future addPath() async {
+    await truckLocationUtil.addPath(
+        controller: _controller,
+        locations: locations,
+        markers: markers,
+        polyLines: polyLines);
+    setState(() {});
     return;
   }
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
-        .buffer
-        .asUint8List();
-  }
-
   getData() async {
+    selections = [true, false];
     locations.clear();
     markers.clear();
     polyLines.clear();
@@ -74,51 +70,7 @@ class _TruckLocationScreenState extends State<TruckLocationScreen> {
     } else {
       dateValues =
           SfRangeValues(locations.first.uploadTime, locations.last.uploadTime);
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-          target: LatLng(locations.first.latitude, locations.first.longitude),
-          zoom: 16)));
-      polyLines.add(Polyline(
-        width: 4,
-        color: Colors.blue,
-        polylineId: PolylineId("truck"),
-        points: locations
-            .map(
-              (e) => LatLng(e.latitude, e.longitude),
-            )
-            .toList(),
-        endCap: Cap.buttCap,
-        startCap: Cap.roundCap,
-      ));
-      //await createUserIcon();
-      final Uint8List curImg = await getBytesFromAsset(
-        "assets/images/current_marker.png",
-        150,
-      );
-
-      final Uint8List startImg = await getBytesFromAsset(
-        "assets/images/start_marker.png",
-        150,
-      );
-
-      markers.add(
-        Marker(
-          markerId: MarkerId("${locations.first.id}"),
-          position: LatLng(locations.first.latitude, locations.first.longitude),
-          icon: BitmapDescriptor.fromBytes(startImg),
-          infoWindow: InfoWindow(
-              title: "${DateFormat.jm().format(locations.first.uploadTime)}"),
-        ),
-      );
-      markers.add(
-        Marker(
-          markerId: MarkerId("${locations.last.id}"),
-          position: LatLng(locations.last.latitude, locations.last.longitude),
-          icon: BitmapDescriptor.fromBytes(curImg),
-          infoWindow: InfoWindow(
-              title: "${DateFormat.jm().format(locations.last.uploadTime)}"),
-        ),
-      );
+      await addPath();
     }
     isLoad = false;
     setState(() {});
@@ -127,64 +79,18 @@ class _TruckLocationScreenState extends State<TruckLocationScreen> {
   filterData() async {
     isSetting = true;
     setState(() {});
-    List<TruckLocation> tempLocations = [];
-    markers.clear();
-    polyLines.clear();
-    locations.map((e) {
-      if (e.uploadTime.isAfter(dateValues.start) &&
-          e.uploadTime.isBefore(dateValues.end)) {
-        tempLocations.add(e);
-      }
-    }).toList();
-    if (tempLocations.length > 0) {
-      polyLines.add(Polyline(
-        width: 4,
-        color: Colors.blue,
-        polylineId: PolylineId("truck"),
-        points: tempLocations
-            .map(
-              (e) => LatLng(e.latitude, e.longitude),
-            )
-            .toList(),
-        endCap: Cap.buttCap,
-        startCap: Cap.roundCap,
-      ));
-      //await createUserIcon();
-      final Uint8List curImg = await getBytesFromAsset(
-        "assets/images/current_marker.png",
-        150,
-      );
-
-      final Uint8List startImg = await getBytesFromAsset(
-        "assets/images/start_marker.png",
-        150,
-      );
-
-      markers.add(
-        Marker(
-          markerId: MarkerId("${tempLocations.first.id}"),
-          position: LatLng(
-              tempLocations.first.latitude, tempLocations.first.longitude),
-          icon: BitmapDescriptor.fromBytes(startImg),
-          infoWindow: InfoWindow(
-              title:
-                  "${DateFormat.jm().format(tempLocations.first.uploadTime)}"),
-        ),
-      );
-      markers.add(
-        Marker(
-          markerId: MarkerId("${tempLocations.last.id}"),
-          position:
-              LatLng(tempLocations.last.latitude, tempLocations.last.longitude),
-          icon: BitmapDescriptor.fromBytes(curImg),
-          infoWindow: InfoWindow(
-              title:
-                  "${DateFormat.jm().format(tempLocations.last.uploadTime)}"),
-        ),
-      );
-    }
+    await truckLocationUtil.filterData(
+        polyLines: polyLines,
+        markers: markers,
+        locations: locations,
+        dateValues: dateValues);
     isSetting = false;
+    setState(() {});
+  }
 
+  addStops() {
+    truckLocationUtil.addStops(
+        markers: markers, locations: locations, polyLines: polyLines);
     setState(() {});
   }
 
@@ -258,25 +164,56 @@ class _TruckLocationScreenState extends State<TruckLocationScreen> {
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: SfRangeSlider(
-                    min: locations.first.uploadTime,
-                    max: locations.last.uploadTime,
-                    values: dateValues,
-                    interval: 2,
-                    dateFormat: DateFormat.jm(),
-                    dateIntervalType: DateIntervalType.hours,
-                    showTicks: true,
-                    showLabels: true,
-                    showTooltip: true,
-                    minorTicksPerInterval: 1,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        dateValues = value;
-                        if (!isSetting) {
-                          filterData();
-                        }
-                      });
-                    },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Row(
+                        children: [
+                          ToggleButtons(
+                            children: [
+                              Icon(Icons.map_outlined),
+                              Icon(Icons.add_location),
+                            ],
+                            isSelected: selections,
+                            onPressed: (index) async {
+                              print(index);
+                              if (index == 0) {
+                                selections[0] = true;
+                                selections[1] = false;
+                                addPath();
+                              } else {
+                                selections[0] = false;
+                                selections[1] = true;
+                                addStops();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                      SfRangeSlider(
+                        min: locations.first.uploadTime,
+                        max: locations.last.uploadTime,
+                        values: dateValues,
+                        interval: 2,
+                        dateFormat: DateFormat.jm(),
+                        dateIntervalType: DateIntervalType.hours,
+                        showTicks: true,
+                        showLabels: true,
+                        showTooltip: true,
+                        minorTicksPerInterval: 1,
+                        onChanged: (dynamic value) {
+                          setState(() {
+                            dateValues = value;
+                            if (!isSetting) {
+                              filterData();
+                            }
+                          });
+                        },
+                      ),
+                    ],
                   ),
                 )
             ],

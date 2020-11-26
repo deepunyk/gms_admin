@@ -6,13 +6,8 @@ import 'package:gms_admin/screens/collection_screen.dart';
 import 'package:gms_admin/screens/map_screen.dart';
 import 'package:gms_admin/screens/report_screen.dart';
 import 'package:gms_admin/screens/send_screen.dart';
+import 'package:gms_admin/screens/statistics_screen.dart';
 import 'package:gms_admin/screens/truck_location_screen.dart';
-import 'package:gms_admin/services/data_service.dart';
-import 'package:gms_admin/widgets/collected_section.dart';
-import 'package:gms_admin/widgets/collecting_section.dart';
-import 'package:gms_admin/widgets/custom_loading.dart';
-import 'package:gms_admin/widgets/pending_section.dart';
-import 'package:intl/intl.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,11 +15,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int curIndex = 0;
+  int curIndex = 3;
   List<Widget> screens = [
     CollectionScreen(),
     ReportScreen(),
     TruckLocationScreen(),
+    StatisticsScreen(),
     SendScreen(),
   ];
 
@@ -77,6 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.location_on,
               ),
               label: "Location"),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.data_usage,
+              ),
+              label: "Statistics"),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.send,

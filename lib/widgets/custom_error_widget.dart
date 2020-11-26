@@ -15,6 +15,7 @@ class _CustomErrorWidgetState extends State<CustomErrorWidget> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      height: double.infinity,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
