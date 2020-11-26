@@ -56,82 +56,87 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoad
-        ? CustomLoading()
-        : mainModels.length == 0
-            ? CustomErrorWidget(
-                title: 'Something went wrong, please restart the app',
-                iconData: Icons.error_outline,
-              )
-            : Stack(
-                children: [
-                  SmartRefresher(
-                    enablePullDown: true,
-                    header: ClassicHeader(),
-                    onRefresh: getData,
-                    controller: _refreshController,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Card(
-                            margin: EdgeInsets.only(bottom: 0),
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                onTap: () {
-                                  selectDate(context);
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(vertical: 16),
-                                  alignment: Alignment.center,
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "Selected Date: ${DateFormat.yMMMEd().format(selectedDate)}",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      Icon(
-                                        Icons.edit,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Collection"),
+      ),
+      body: isLoad
+          ? CustomLoading()
+          : mainModels.length == 0
+              ? CustomErrorWidget(
+                  title: 'Something went wrong, please restart the app',
+                  iconData: Icons.error_outline,
+                )
+              : Stack(
+                  children: [
+                    SmartRefresher(
+                      enablePullDown: true,
+                      header: ClassicHeader(),
+                      onRefresh: getData,
+                      controller: _refreshController,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Card(
+                              margin: EdgeInsets.only(bottom: 0),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () {
+                                    selectDate(context);
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: EdgeInsets.symmetric(vertical: 16),
+                                    alignment: Alignment.center,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          "Selected Date: ${DateFormat.yMMMEd().format(selectedDate)}",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
+                                        Icon(
+                                          Icons.edit,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          PendingSection(mainModels),
-                          CollectingSection(mainModels),
-                          CollectedSection(mainModels),
-                          SizedBox(
-                            height: Get.height * 0.2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: 16),
-                      child: RaisedButton(
-                        color: Theme.of(context).primaryColor,
-                        onPressed: () {
-                          Get.to(MapScreen(), arguments: mainModels);
-                        },
-                        child: Text(
-                          "SHOW IN MAPS",
-                          style: TextStyle(color: Colors.white),
+                            PendingSection(mainModels),
+                            CollectingSection(mainModels),
+                            CollectedSection(mainModels),
+                            SizedBox(
+                              height: Get.height * 0.2,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: 16),
+                        child: RaisedButton(
+                          color: Theme.of(context).primaryColor,
+                          onPressed: () {
+                            Get.to(MapScreen(), arguments: mainModels);
+                          },
+                          child: Text(
+                            "SHOW IN MAPS",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+    );
   }
 }

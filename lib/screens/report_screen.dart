@@ -114,61 +114,66 @@ class _ReportScreenState extends State<ReportScreen> {
   Widget build(BuildContext context) {
     DateTime prevDate;
 
-    return isLoad == true
-        ? CustomLoading()
-        : reports.length == 0
-            ? CustomErrorWidget(
-                title: "No reports found",
-                iconData: Icons.not_interested,
-              )
-            : Container(
-                child: SmartRefresher(
-                  enablePullDown: true,
-                  header: ClassicHeader(),
-                  onRefresh: getReports,
-                  controller: _refreshController,
-                  child: ListView.builder(
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    itemBuilder: (context, index) {
-                      if (prevDate == null) {
-                        prevDate = reports[index].complaintDate;
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              child: Text(
-                                  "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
-                            ),
-                            reportCard(index)
-                          ],
-                        );
-                      } else {
-                        final reportDay = DateTime(
-                            reports[index].complaintDate.year,
-                            reports[index].complaintDate.month,
-                            reports[index].complaintDate.day);
-                        final prevDay = DateTime(
-                            prevDate.year, prevDate.month, prevDate.day);
-                        bool check = reportDay == prevDay;
-                        if (!check) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Reports"),
+      ),
+      body: isLoad == true
+          ? CustomLoading()
+          : reports.length == 0
+              ? CustomErrorWidget(
+                  title: "No reports found",
+                  iconData: Icons.not_interested,
+                )
+              : Container(
+                  child: SmartRefresher(
+                    enablePullDown: true,
+                    header: ClassicHeader(),
+                    onRefresh: getReports,
+                    controller: _refreshController,
+                    child: ListView.builder(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      itemBuilder: (context, index) {
+                        if (prevDate == null) {
                           prevDate = reports[index].complaintDate;
-                        }
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            if (!check)
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
                               Container(
                                 child: Text(
                                     "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
                               ),
-                            reportCard(index)
-                          ],
-                        );
-                      }
-                    },
-                    itemCount: reports.length,
+                              reportCard(index)
+                            ],
+                          );
+                        } else {
+                          final reportDay = DateTime(
+                              reports[index].complaintDate.year,
+                              reports[index].complaintDate.month,
+                              reports[index].complaintDate.day);
+                          final prevDay = DateTime(
+                              prevDate.year, prevDate.month, prevDate.day);
+                          bool check = reportDay == prevDay;
+                          if (!check) {
+                            prevDate = reports[index].complaintDate;
+                          }
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (!check)
+                                Container(
+                                  child: Text(
+                                      "${DateFormat.yMMMEd().format(reports[index].complaintDate)}"),
+                                ),
+                              reportCard(index)
+                            ],
+                          );
+                        }
+                      },
+                      itemCount: reports.length,
+                    ),
                   ),
                 ),
-              );
+    );
   }
 }

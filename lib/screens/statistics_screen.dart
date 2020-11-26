@@ -120,6 +120,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Statistics"),
+      ),
       body: isLoad
           ? CustomLoading()
           : Container(

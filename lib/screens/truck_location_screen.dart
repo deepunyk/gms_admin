@@ -104,6 +104,9 @@ class _TruckLocationScreenState extends State<TruckLocationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Truck Location"),
+      ),
       body: Stack(
         children: [
           Column(

@@ -30,54 +30,59 @@ class _SendScreenState extends State<SendScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoad
-        ? CustomLoading()
-        : Container(
-            padding: EdgeInsets.symmetric(horizontal: Get.width * 0.08),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Send Alert",
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(
-                  height: Get.height * 0.04,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: Theme.of(context).primaryColor, width: 1)),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: TextField(
-                    decoration:
-                        InputDecoration.collapsed(hintText: "Enter something"),
-                    textCapitalization: TextCapitalization.sentences,
-                    controller: controller,
-                    minLines: 6,
-                    maxLines: 6,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: Get.height * 0.04),
-                  child: RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      addAlert();
-                    },
-                    child: Text(
-                      "SEND",
-                      style: TextStyle(color: Colors.white),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Send"),
+      ),
+      body: isLoad
+          ? CustomLoading()
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: Get.width * 0.08),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Send Alert",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: Get.height * 0.04,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: Theme.of(context).primaryColor, width: 1)),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    child: TextField(
+                      decoration: InputDecoration.collapsed(
+                          hintText: "Enter something"),
+                      textCapitalization: TextCapitalization.sentences,
+                      controller: controller,
+                      minLines: 6,
+                      maxLines: 6,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(top: Get.height * 0.04),
+                    child: RaisedButton(
+                      color: Theme.of(context).primaryColor,
+                      onPressed: () {
+                        addAlert();
+                      },
+                      child: Text(
+                        "SEND",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
+    );
   }
 }
