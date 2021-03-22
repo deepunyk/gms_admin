@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gms_admin/data/custom_constants.dart';
 import 'package:gms_admin/utils/conn_utils.dart';
 
 class AuthService {
@@ -10,7 +11,7 @@ class AuthService {
     print("$phone $password");
     try {
       Response response = await dio.post(
-        "${ConnUtils.url}signIn",
+        "${CustomConstants.url}signIn",
         data: {
           'admin_password': password,
           "admin_phone": phone,
