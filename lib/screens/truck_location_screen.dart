@@ -1,14 +1,10 @@
 import 'dart:async';
-import 'dart:math';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:gms_admin/models/truck_location_model.dart';
-import 'package:gms_admin/services/data_service.dart';
-import 'package:gms_admin/utils/truck_location_util.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
+import 'package:gms_core/models/truck_location_model.dart';
+import 'package:gms_core/services/data_service.dart';
+import 'package:gms_core/utils/truck_location_util.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';

@@ -1,13 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gms_admin/models/main_model.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gms_admin/screens/collection_screen.dart';
-import 'package:gms_admin/screens/map_screen.dart';
 import 'package:gms_admin/screens/report_screen.dart';
 import 'package:gms_admin/screens/send_screen.dart';
 import 'package:gms_admin/screens/statistics_screen.dart';
 import 'package:gms_admin/screens/truck_location_screen.dart';
+import 'package:gms_admin/widgets/custom_network_image.dart';
 import 'package:gms_admin/widgets/grid_card.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -120,14 +120,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         shape: BoxShape.circle,
                       ),
-                      child: Image.asset(
-                        "assets/images/profile.png",
-                        fit: BoxFit.cover,
+                      child: CustomNetWorkImage(
+                        GetStorage().read("photo"),
                       ),
                     ),
                   ),
                   Text(
-                    "Mr. XYZ",
+                    GetStorage().read("name"),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
@@ -138,7 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Text(
-                    "District Administrator",
+                    GetStorage().read("designation"),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(

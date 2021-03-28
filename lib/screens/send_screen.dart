@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gms_admin/services/alert_service.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
+import 'package:gms_core/services/notification_service.dart';
 
 class SendScreen extends StatefulWidget {
   @override
@@ -19,8 +19,7 @@ class _SendScreenState extends State<SendScreen> {
     if (message.length < 3) {
       Get.rawSnackbar(message: "Please enter a valid message");
     } else {
-      AlertService alertService = AlertService();
-      await alertService.addAlert(message);
+      //NotificationService notificationService = NotificationService();
       Get.rawSnackbar(message: "Your message has been sent to all the users");
       controller.clear();
     }

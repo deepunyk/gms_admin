@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gms_admin/screens/home_screen.dart';
-import 'package:gms_admin/services/auth_service.dart';
 import 'package:gms_admin/widgets/custom_auth_button.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
+import 'package:gms_core/models/user.dart';
+import 'package:gms_core/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,13 +19,27 @@ class _LoginScreenState extends State<LoginScreen> {
 
   userSignIn() async {
     if (phoneController.text.trim().length == 10) {
+      isLoad = true;
+      setState(() {});
       AuthService authService = AuthService();
-      bool response = await authService.signIn(
+      final response = await authService.adminSignIn(
           phoneController.text.trim(), passwordController.text.trim());
-      if (response) {
+      if (response != null) {
+        GetStorage box = GetStorage();
+        Admin admin = Admin.fromJson(response["data"]);
+        box.write("id", admin.adminId);
+        box.write("name", admin.name);
+        box.write("photo", admin.photo);
+        box.write("phone", admin.phone);
+        box.write("designation", admin.designation);
         Get.offAll(HomeScreen());
+      } else {
+        isLoad = false;
+        setState(() {});
       }
     } else {
+      isLoad = false;
+      setState(() {});
       Get.rawSnackbar(message: "Invalid credentials");
     }
   }

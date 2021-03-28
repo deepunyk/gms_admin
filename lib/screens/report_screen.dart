@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gms_admin/models/report_model.dart';
-import 'package:gms_admin/services/report_service.dart';
 import 'package:gms_admin/widgets/custom_error_widget.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
+import 'package:gms_core/models/report_model.dart';
+import 'package:gms_core/services/report_service.dart';
 import 'package:intl/intl.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:url_launcher/url_launcher.dart';

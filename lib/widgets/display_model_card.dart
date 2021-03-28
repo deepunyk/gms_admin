@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gms_admin/models/main_model.dart';
+import 'package:gms_core/models/main_model.dart';
 import 'package:intl/intl.dart';
 
 class DisplayModelCard extends StatefulWidget {

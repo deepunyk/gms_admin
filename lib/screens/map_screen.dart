@@ -2,10 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gms_admin/models/main_model.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
+import 'package:gms_core/models/main_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_utils/google_maps_utils.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -49,16 +48,15 @@ class _MapScreenState extends State<MapScreen> {
         }
       }
       polygons.add(Polygon(
-          polygonId: PolygonId(mm.wardId),
+          polygonId: PolygonId(mm.wardId.toString()),
           fillColor: code == 0
               ? Colors.red.withOpacity(0.15)
               : code == 1
                   ? Colors.yellow.withOpacity(0.15)
                   : Colors.green.withOpacity(0.15),
           strokeWidth: 1,
-          points: mm.latitude.map((lat) {
-            return LatLng(double.parse(lat),
-                double.parse(mm.longitude[mm.latitude.indexOf(lat)]));
+          points: mm.latitudes.map((lat) {
+            return LatLng(lat, mm.longitudes[mm.latitudes.indexOf(lat)]);
           }).toList()));
     }).toList();
   }

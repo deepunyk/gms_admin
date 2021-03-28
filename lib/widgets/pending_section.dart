@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gms_admin/models/main_model.dart';
 import 'package:gms_admin/widgets/display_model_card.dart';
+import 'package:gms_core/models/main_model.dart';
 
 class PendingSection extends StatefulWidget {
   final List<MainModel> mainModels;

@@ -40,7 +40,10 @@ dependencies:
   syncfusion_flutter_charts:
   dio:
   get_storage:
+  cached_network_image: null
 
+  gms_core:
+    path: ../gms_core
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0

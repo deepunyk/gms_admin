@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:gms_admin/models/truck_location_model.dart';
-import 'package:gms_admin/services/data_service.dart';
-import 'package:gms_admin/utils/statistics_util.dart';
 import 'package:gms_admin/widgets/custom_error_widget.dart';
 import 'package:gms_admin/widgets/custom_loading.dart';
+import 'package:gms_core/models/truck_location_model.dart';
+import 'package:gms_core/services/data_service.dart';
+import 'package:gms_core/utils/statistics_util.dart';
 import 'package:intl/intl.dart';
 
 class StatisticsScreen extends StatefulWidget {
@@ -28,6 +27,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
   int totalDumps = 0;
   Duration totalDumpingTime = Duration(minutes: 0);
   Duration totalCollectionTime = Duration(minutes: 0);
+  DataService dataService = DataService();
 
   Future<void> selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -63,7 +63,6 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     selections = [true, false];
     locations.clear();
     totalDistance = 0;
-    DataService dataService = DataService();
     await dataService.getLocationData(locations, selectedDate);
     if (locations.length >= 10) {
       for (var i = 0; i < locations.length - 1; i++) {

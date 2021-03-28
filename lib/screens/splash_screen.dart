@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
           milliseconds: 500,
         ), () {
       GetStorage box = GetStorage();
-      if (box.hasData("token")) {
+      if (box.hasData("id")) {
         Get.offAll(HomeScreen());
       } else {
         Get.offAll(LoginScreen());
